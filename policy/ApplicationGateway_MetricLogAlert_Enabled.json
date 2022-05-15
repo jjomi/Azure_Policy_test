@@ -1,0 +1,90 @@
+{
+ "properties": {
+  "displayName": "ApplicationGateway_MetricLogAlert_Enabled",
+  "policyType": "Custom",
+  "mode": "All",
+  "description": "ApplicationGateway_MetricLogAlert_Enabled",
+  "metadata": {
+   "version": "1.0.0",
+   "createdBy": "7cab17e8-20b0-4306-b891-37348018c5c3",
+   "createdOn": "2022-02-08T04:46:04.3794855Z",
+   "updatedBy": "7cab17e8-20b0-4306-b891-37348018c5c3",
+   "updatedOn": "2022-02-09T07:18:08.6789101Z"
+  },
+  "parameters": {
+   "effect": {
+    "type": "String",
+    "metadata": {
+     "displayName": "효과",
+     "description": "정책 실행을 사용 또는 사용 안 함"
+    },
+    "allowedValues": [
+     "AuditIfNotExists",
+     "Disabled"
+    ],
+    "defaultValue": "AuditIfNotExists"
+   },
+   "metricName": {
+    "type": "String",
+    "metadata": {
+     "displayName": "매트릭 이름",
+     "description": "매트릭 경고가 있어야 하는 매트릭 이름"
+    },
+    "allowedValues": [
+     "BackendResponseStatus",
+     "ComputeUnits",
+     "FailedRequests",
+     "HealthyHostCount",
+     "ResponseStatus",
+     "Throughput",
+     "UnhealthyHostCount"
+    ]
+   }
+  },
+  "policyRule": {
+   "if": {
+    "allOf": [
+     {
+      "field": "type",
+      "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+     }
+    ]
+   },
+   "then": {
+    "effect": "[parameters('effect')]",
+    "details": {
+     "type": "Microsoft.Insights/metricAlerts",
+     "existenceCondition": {
+      "allOf": [
+       {
+        "field": "Microsoft.Insights/metricAlerts/enabled",
+        "equals": "true"
+       },
+       {
+        "count": {
+         "field": "Microsoft.Insights/metricAlerts/criteria.Microsoft-Azure-Monitor-SingleResourceMultipleMetricCriteria.allOf[*]",
+         "where": {
+          "anyOf": [
+           {
+            "field": "Microsoft.Insights/metricAlerts/criteria.Microsoft-Azure-Monitor-SingleResourceMultipleMetricCriteria.allOf[*].metricNamespace",
+            "equals": "Microsoft.Network/applicationGateways"
+           },
+           {
+            "field": "Microsoft.Insights/metricAlerts/criteria.Microsoft-Azure-Monitor-SingleResourceMultipleMetricCriteria.allOf[*].metricName",
+            "equals": "[parameters('metricName')]"
+           }
+          ]
+         }
+        },
+        "equals": 2
+       }
+      ]
+     }
+    }
+   }
+  }
+ },
+ "id": "/subscriptions/44c4d531-9f11-4ab0-bf2f-29cae5ff941c/providers/Microsoft.Authorization/policyDefinitions/ApplicationGateway_MetricLogAlert_Enabled",
+ "type": "Microsoft.Authorization/policyDefinitions",
+ "name": "ApplicationGateway_MetricLogAlert_Enabled"
+}

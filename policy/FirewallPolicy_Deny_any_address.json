@@ -1,0 +1,65 @@
+{
+ "properties": {
+  "displayName": "FirewallPolicy_Deny_Any_address",
+  "policyType": "Custom",
+  "mode": "All",
+  "description": "FirewallPolicy_Deny_Any_address",
+  "metadata": {
+   "version": "1.0.0",
+   "category": "Network",
+   "createdBy": "7cab17e8-20b0-4306-b891-37348018c5c3",
+   "createdOn": "2022-02-08T04:46:26.8783851Z",
+   "updatedBy": "7cab17e8-20b0-4306-b891-37348018c5c3",
+   "updatedOn": "2022-02-09T07:18:27.1303696Z"
+  },
+  "policyRule": {
+   "if": {
+    "field": "type",
+    "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+   },
+   "then": {
+    "effect": "AuditIfNotExists",
+    "details": {
+     "type": "Microsoft.Network/firewallPolicies",
+     "existenceCondition": {
+      "count": {
+       "field": "Microsoft.Network/firewallPolicies/ruleCollectionGroups/ruleCollections[*]",
+       "where": {
+        "anyOf": [
+         {
+          "field": "Microsoft.Network/firewallPolicies/ruleCollectionGroups/ruleCollections[*].FirewallPolicyFilterRuleCollection.rules[*].NetworkRule.sourceAddresses",
+          "notequals": "*"
+         },
+         {
+          "field": "Microsoft.Network/firewallPolicies/ruleCollectionGroups/ruleCollections[*].FirewallPolicyFilterRuleCollection.rules[*].NatRule.sourceAddresses",
+          "notequals": "*"
+         },
+         {
+          "field": "Microsoft.Network/firewallPolicies/ruleCollectionGroups/ruleCollections[*].FirewallPolicyFilterRuleCollection.rules[*].ApplicationRule.sourceAddresses",
+          "notequals": "*"
+         },
+         {
+          "field": "Microsoft.Network/firewallPolicies/ruleCollectionGroups/ruleCollections[*].FirewallPolicyNatRuleCollection.rules[*].NetworkRule.sourceAddresses",
+          "notequals": "*"
+         },
+         {
+          "field": "Microsoft.Network/firewallPolicies/ruleCollectionGroups/ruleCollections[*].FirewallPolicyNatRuleCollection.rules[*].NatRule.sourceAddresses",
+          "notequals": "*"
+         },
+         {
+          "field": "Microsoft.Network/firewallPolicies/ruleCollectionGroups/ruleCollections[*].FirewallPolicyNatRuleCollection.rules[*].ApplicationRule.sourceAddresses",
+          "notequals": "*"
+         }
+        ]
+       }
+      },
+      "Equals": 6
+     }
+    }
+   }
+  }
+ },
+ "id": "/subscriptions/44c4d531-9f11-4ab0-bf2f-29cae5ff941c/providers/Microsoft.Authorization/policyDefinitions/FirewallPolicy_Deny_Any_address",
+ "type": "Microsoft.Authorization/policyDefinitions",
+ "name": "FirewallPolicy_Deny_Any_address"
+}
